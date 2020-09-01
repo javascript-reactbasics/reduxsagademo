@@ -3,11 +3,24 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
+import rootReducer from "./reducers";
+import createSagaMiddleware from "redux-saga";
+import { createStore, applyMiddleware ,compose} from "redux";
+import { Provider } from "react-redux";
+import {getAsyncDataWatcher} from "./saga";
+const sagaMiddleware = createSagaMiddleware();
+//const enhancers = [window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(), ];
+const store = createStore(
+  rootReducer,
+  applyMiddleware(sagaMiddleware)
+ 
+);
+sagaMiddleware.run(getAsyncDataWatcher);
 
 ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
+  <Provider store={store}>
+  <App />
+</Provider>,
   document.getElementById('root')
 );
 
